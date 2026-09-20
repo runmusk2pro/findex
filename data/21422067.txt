@@ -1,0 +1,410 @@
+Gaussian logarithm
+
+In mathematics, addition and subtraction logarithms or Gaussian logarithms can be utilized to find the logarithms of the sum and difference of a pair of values whose logarithms are known, without knowing the values themselves.
+Their mathematical foundations trace back to Zecchini Leonelli and Carl Friedrich Gauss in the early 1800s.
+
+The operations of addition and subtraction can be calculated by the formulas
+
+  
+    
+      
+        
+          log
+          
+            b
+          
+        
+        ⁡
+        
+          
+            (
+          
+        
+        
+          |
+        
+        X
+        
+          |
+        
+        +
+        
+          |
+        
+        Y
+        
+          |
+        
+        
+          
+            )
+          
+        
+        =
+        x
+        +
+        
+          s
+          
+            b
+          
+        
+        (
+        y
+        −
+        x
+        )
+        ,
+      
+    
+    {\displaystyle \log _{b}{\big (}|X|+|Y|{\big )}=x+s_{b}(y-x),}
+  
+
+  
+    
+      
+        
+          log
+          
+            b
+          
+        
+        ⁡
+        
+          
+            (
+          
+        
+        
+          
+            |
+          
+        
+        
+          |
+        
+        X
+        
+          |
+        
+        −
+        
+          |
+        
+        Y
+        
+          |
+        
+        
+          
+            |
+          
+        
+        
+          
+            )
+          
+        
+        =
+        x
+        +
+        
+          d
+          
+            b
+          
+        
+        (
+        y
+        −
+        x
+        )
+        ,
+      
+    
+    {\displaystyle \log _{b}{\big (}{\big |}|X|-|Y|{\big |}{\big )}=x+d_{b}(y-x),}
+  
+
+where
+
+  
+    
+      
+        x
+        =
+        
+          log
+          
+            b
+          
+        
+        ⁡
+        
+          |
+        
+        X
+        
+          |
+        
+      
+    
+    {\displaystyle x=\log _{b}|X|}
+  
+,
+
+  
+    
+      
+        y
+        =
+        
+          log
+          
+            b
+          
+        
+        ⁡
+        
+          |
+        
+        Y
+        
+          |
+        
+      
+    
+    {\displaystyle y=\log _{b}|Y|}
+  
+,
+
+  
+    
+      
+        
+          s
+          
+            b
+          
+        
+        (
+        z
+        )
+        =
+        
+          log
+          
+            b
+          
+        
+        ⁡
+        (
+        1
+        +
+        
+          b
+          
+            z
+          
+        
+        )
+      
+    
+    {\displaystyle s_{b}(z)=\log _{b}(1+b^{z})}
+  
+, and
+
+  
+    
+      
+        
+          d
+          
+            b
+          
+        
+        (
+        z
+        )
+        =
+        
+          log
+          
+            b
+          
+        
+        ⁡
+        
+          |
+        
+        1
+        −
+        
+          b
+          
+            z
+          
+        
+        
+          |
+        
+      
+    
+    {\displaystyle d_{b}(z)=\log _{b}|1-b^{z}|}
+  
+.
+The "sum" function 
+  
+    
+      
+        
+          s
+          
+            b
+          
+        
+        (
+        z
+        )
+      
+    
+    {\displaystyle s_{b}(z)}
+  
+ and the "difference" function 
+  
+    
+      
+        
+          d
+          
+            b
+          
+        
+        (
+        z
+        )
+      
+    
+    {\displaystyle d_{b}(z)}
+  
+ are also known as Gaussian logarithms.
+For natural logarithms with 
+  
+    
+      
+        b
+        =
+        e
+      
+    
+    {\displaystyle b=e}
+  
+ the following identities with hyperbolic functions exist:
+
+  
+    
+      
+        
+          s
+          
+            e
+          
+        
+        (
+        z
+        )
+        =
+        ln
+        ⁡
+        2
+        +
+        
+          
+            z
+            2
+          
+        
+        +
+        ln
+        ⁡
+        
+          (
+          
+            cosh
+            ⁡
+            
+              
+                z
+                2
+              
+            
+          
+          )
+        
+        .
+      
+    
+    {\displaystyle s_{e}(z)=\ln 2+{\frac {z}{2}}+\ln \left(\cosh {\frac {z}{2}}\right).}
+  
+
+  
+    
+      
+        
+          d
+          
+            e
+          
+        
+        (
+        z
+        )
+        =
+        ln
+        ⁡
+        2
+        +
+        
+          
+            z
+            2
+          
+        
+        +
+        ln
+        ⁡
+        
+          |
+          
+            sinh
+            ⁡
+            
+              
+                z
+                2
+              
+            
+          
+          |
+        
+        .
+      
+    
+    {\displaystyle d_{e}(z)=\ln 2+{\frac {z}{2}}+\ln \left|\sinh {\frac {z}{2}}\right|.}
+  
+
+This shows that 
+  
+    
+      
+        
+          s
+          
+            e
+          
+        
+      
+    
+    {\displaystyle s_{e}}
+  
+ has a Taylor expansion where all but the first term are rational and all odd terms except the linear term are zero.
+The simplification of multiplication, division, roots, and powers is counterbalanced by the cost of evaluating these functions for addition and subtraction.

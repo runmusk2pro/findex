@@ -1,0 +1,100 @@
+Parallel algorithms for minimum spanning trees
+
+In graph theory a minimum spanning tree (MST) 
+  
+    
+      
+        T
+      
+    
+    {\displaystyle T}
+  
+ of a graph 
+  
+    
+      
+        G
+        =
+        (
+        V
+        ,
+        E
+        )
+      
+    
+    {\displaystyle G=(V,E)}
+  
+ with 
+  
+    
+      
+        
+          |
+        
+        V
+        
+          |
+        
+        =
+        n
+      
+    
+    {\displaystyle |V|=n}
+  
+ and 
+  
+    
+      
+        
+          |
+        
+        E
+        
+          |
+        
+        =
+        m
+      
+    
+    {\displaystyle |E|=m}
+  
+ is a tree subgraph of 
+  
+    
+      
+        G
+      
+    
+    {\displaystyle G}
+  
+ that contains all of its vertices and is of minimum weight. 
+MSTs are useful and versatile tools utilised in a wide variety of practical and theoretical fields. For example, a company looking to supply multiple stores with a certain product from a single warehouse might use an MST originating at the warehouse to calculate the shortest paths to each company store. In this case the stores and the warehouse are represented as vertices and the road connections between them - as edges. Each edge is labelled with the length of the corresponding road connection.
+If 
+  
+    
+      
+        G
+      
+    
+    {\displaystyle G}
+  
+ is edge-unweighted every spanning tree possesses the same number of edges and thus the same weight. In the edge-weighted case, the spanning tree, the sum of the weights of the edges of which is lowest among all spanning trees of 
+  
+    
+      
+        G
+      
+    
+    {\displaystyle G}
+  
+, is called a minimum spanning tree (MST). It is not necessarily unique. More generally, graphs that are not necessarily connected have minimum spanning forests, which consist of a union of MSTs for each connected component. 
+As finding MSTs is a widespread problem in graph theory, there exist many sequential algorithms for solving it. Among them are Prim's, Kruskal's and Borůvka's algorithms, each utilising different properties of MSTs. They all operate in a similar fashion - a subset of 
+  
+    
+      
+        E
+      
+    
+    {\displaystyle E}
+  
+ is iteratively grown until a valid MST has been discovered. However, as practical problems are often quite large (road networks sometimes have billions of edges), performance is a key factor. One option of improving it is by parallelising known MST algorithms.

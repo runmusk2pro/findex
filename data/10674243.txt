@@ -1,0 +1,11 @@
+Tzanck test
+
+In dermatopathology, the Tzanck test, also Tzanck smear, is scraping of an ulcer base to look for Tzanck cells.  It is sometimes also called the chickenpox skin test and the herpes skin test. It is a simple, low-cost, and rapid office based test.
+Tzanck cells (acantholytic cells) are found in:
+
+Herpes simplex
+Varicella and herpes zoster
+Pemphigus vulgaris
+Cytomegalovirus
+Arnault Tzanck did the first cytological examinations in order to diagnose skin diseases. To diagnose pemphigus, he identified acantholytic cells, and to diagnose of herpetic infections he identified multinucleated giant cells and acantholytic cells. He extended his cytologic findings to certain skin tumors as well.
+Even though cytological examination can provide rapid and reliable diagnosis for many skin diseases, its use is limited to a few diseases. In endemic regions, Tzanck test is used to diagnose leishmaniasis and leprosy. For other regions, Tzanck test is mainly used to diagnose pemphigus and herpetic infections. Some clinics use biopsies even for herpetic infections. This is because the advantages of this test are not well known, and the main textbooks of dermatopathology do not include dedicated sections for cytology or Tzanck smear. A deep learning model called TzanckNet has been developed to lower the experience barrier needed to use this test.

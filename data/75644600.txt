@@ -1,0 +1,11 @@
+Theory-driven evaluation
+
+Theory-driven evaluation (also theory-based evaluation) is an umbrella term for any approach to program evaluation – quantitative, qualitative, or mixed method – that develops a theory of change and uses it to design, implement, analyze, and interpret findings from an evaluation. More specifically, an evaluation is theory-driven if it:
+
+formulates a theory of change using some combination of social science, lived experience, and program-related professionals' expertise;
+develops and prioritizes evaluation questions using the theory;
+uses the theory to guide the design and implementation of the evaluation;
+uses the theory to operationalize contextual, process, and outcome variables;
+provides a causal explanation of how and why outcomes were achieved, including whether the program worked and/or had any unintended consequences (desirable or harmful); and
+explains what factors moderate outcomes.
+By investigating the mechanisms leading to outcomes, theory-driven approaches facilitate learning to improve programs and how they are implemented, and help knowledge to accumulate – including across ostensibly different programs. This is in contrast to methods-driven "black box" evaluations, which focus on following the steps of a method (for instance, randomized experiment or focus group) and only assess whether a program achieves its intended outcomes. Theory-driven approaches can also improve the validity of evaluations, for instance leading to more precise estimates of impact in randomized controlled trials.

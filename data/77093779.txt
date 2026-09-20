@@ -1,0 +1,6 @@
+NGC 4712
+
+NGC 4712 is a spiral galaxy located in the constellation Coma Berenices. Its speed relative to the cosmic microwave background is 4,664 ± 20 km/s, which corresponds to a Hubble distance of 68.8 ± 4.8 Mpc (~224 million ly). NGC 4712 was discovered by German-British astronomer John Herschel in 1832.
+The luminosity class of NGC 4712 is II-III and it has a broad HI line. It also contains regions of ionized hydrogen.
+To date, around ten measurements not based on redshift give a distance of 63.640 ± 16.932 Mpc (~208 million ly), which is within the distance values of Hubble. Note, however, that it is with the average value of independent measurements, when they exist, that the NASA/IPAC database calculates the diameter of a galaxy and that consequently the diameter of NGC 4712 could be approximately 51 .4 kpc (~168,000 ly) if we used the Hubble distance to calculate it.
+According to Vaucouleur and Harold Corwin, NGC 4712 and NGC 4725 form a pair of galaxies. However, like several others mentioned in this article, these two galaxies are not an actual pair, because NGC 4725's radial velocity is 1,209 ± 1 km/s and is therefore much closer to the Milky Way. It is therefore an optical pair.

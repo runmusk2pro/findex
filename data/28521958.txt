@@ -1,0 +1,9 @@
+Streetlight effect
+
+The streetlight effect, or the drunkard's search principle, is a type of observational bias that occurs when people only search for something where it is easiest to look. Both names refer to a well-known joke:
+
+A policeman sees a drunk man searching for something under a streetlight and asks what the drunk has lost. He says he lost his keys and they both look under the streetlight together. After a few minutes the policeman asks if he is sure he lost them here, and the drunk replies, no, and that he lost them in the park. The policeman asks why he is searching here, and the drunk replies, "this is where the light is".
+
+The anecdote appears in a story of the Islamic folklore character Nasreddin. In an undated Persian version of the story, Nasreddin loses a ring in a dark room of his house but instead looks for it in the yard because there is "much more light" out there. According to Idries Shah, this tale is used by many Sufis, commenting upon people who seek exotic sources for enlightenment.
+It is also used in the context of computing, when one optimizes where it is not needed and ignores the real performance issue.
+The version with a drunk under a streetlight goes back at least to the 1920s, and has been used metaphorically in the social sciences since at least 1964, when Abraham Kaplan referred to it as "the principle of the drunkard's search". Noam Chomsky has used the tale as a picture of how science operates: "Science is a bit like the joke about the drunk who is looking under a lamppost for a key that he has lost on the other side of the street, because that's where the light is. It has no other choice."

@@ -1,0 +1,30 @@
+Mass in C major, K. 66 "Dominicus"
+
+The Missa solemnis in C major, K. 66, is a mass composed by Wolfgang Amadeus Mozart in 1769 at the age of thirteen. It is scored for SATB soloists and choir, violins I and II, viola, 2 oboes, 2 horns, 2 clarini (high trumpets), 2 trumpets and basso continuo.
+Mozart composed the mass for the ordination of Cajetan Hagenauer, son of Lorenz Hagenauer, the Mozarts' landlord and family friend. Cajetan had entered St Peter's Abbey, a Benedictine monastery, whilst the Mozarts were on their grand tour. When he became a priest in 1769, he took the name Pater Dominicus and celebrated his first solemn high mass; this gives the work its nickname, Dominicusmesse. Leopold Mozart conducted the première on 15 October to a packed church in Salzburg; it is thought that the success of this performance led to Wolfgang's first Italian tour.
+Due to its length, the mass is classified as a missa solemnis. It is divided into six movements.
+
+Kyrie Adagio, C major, 
+"Kyrie eleison" Allegro, C major, 34
+Gloria Allegro moderato, C major, 34
+"Laudamus te" Andante grazioso, F major, 24; soprano/alto duet
+"Gratias agimus tibi" Adagio, C major, 
+"Propter magnam gloriam tuam" Allegro, C major, 
+"Domine Deus" Un poco andante, G major, 34; tenor solo
+"Qui tollis peccata mundi" Un poco adagio, G minor, 
+"Quoniam tu" Andante ma un poco allegro, F major, 34; soprano solo
+"Cum Sancto Spiritu" Alla breve, C major, 
+Credo Molto allegro, C major, 
+"Et incarnatus est" Adagio, F major, 34; soloists
+"Crucifixus" Adagio, C minor, 
+"Et resurrexit" Molto allegro, C major, 
+"Et in Spiritum Sanctum Dominum" Andante, G major, 34; soprano solo
+"Et in unam sanctam" Moderato, C major, 
+"Et vitam venturi saeculi" Allegro, C major, 34
+Sanctus Adagio, C major, 
+"Pleni sunt coeli et terra" Allegro, C major, 34
+"Hosanna in excelsis" Moderato, C major, 
+Benedictus Allegro moderato, G major, ; soloists
+"Hosanna in excelsis" Moderato, C major, 
+Agnus Dei Allegro moderato, C major, 
+"Dona nobis pacem" Allegro, C major, 38

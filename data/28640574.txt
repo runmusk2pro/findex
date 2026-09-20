@@ -1,0 +1,7 @@
+VMworld
+
+VMworld is a global multi-cloud conference, hosted by VMware. It is the largest multi-cloud-specific event. It has been held in San Diego, California in 2004; Las Vegas, Nevada in 2005, 2008, 2011, 2016, 2017, and 2018; Los Angeles, California in 2006; and San Francisco, California in 2007, 2009, 2010, 2012, 2013, 2014, 2015 and 2019. Due to the COVID-19 pandemic, it converted to a fully digital event in 2020.
+The conference was renamed VMware Explore in 2022.
+There is also an annual VMworld conference that has been held since 2008 in Europe, usually in October or November following the US conference. The European conference has been held in France, Denmark, and Spain.
+The conference normally lasts between three and five days and consists of breakout sessions, panels, exhibit hall, and hands-on labs. The first conference was held in the Fall of 2004 and attracted more than 1,600 attendees and over the years has attracted over 20,000 attendees annually.
+Sponsors and partners include AWS, Cisco, NetApp, Intel, HPE, Dell EMC, Hitachi, IBM, Sandisk, and Samsung.

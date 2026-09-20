@@ -1,0 +1,6 @@
+HVDC Gezhouba–Shanghai
+
+The HVDC Gezhouba–Shanghai is a high voltage direct current electric power transmission system between Gezhouba and Nanqiao near Shanghai, China put in service in 1989. The bipolar 1,046-kilometre (650 mi) line is rated at 500 kV and a maximum power of 1,200 MW.
+Between 2008 and 2011 the towers of the most part of the line, which were almost guyed towers capable of carrying two conductors, were replaced by new free-standing line towers for 4 conductors in order to install the conductors for the HVDC Hubei-Shanghai on them. This 970 km long line, which is also a bipolar HVDC with an operating voltage of 500 kV runs from Jingmen to Fenjing and has a transmission capacity of 3000 MW.
+HVDC Hubei-Shanghai shares also the grounding electrode of HVDC Gezhouba–Shanghai for the Nanqiao terminal. For most of its length, the electrode line of HVDC Gezhouba–Shanghai carries also the electrode line of HVDC Hubei-Shanghai. HVDC Gezhouba–Shanghai carries between Fenjing and Nanqiao also the electrode line of HVDC Hubei-Shanghai in most part of its length on its towers.
+The grounding electrode of HVDC Hubei-Shanghai at Chujiahu is also used by HVDC Three Gorges-Changzhou.

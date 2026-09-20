@@ -1,0 +1,6 @@
+VAX-11
+
+The VAX-11 is a discontinued family of 32-bit superminicomputers, running the Virtual Address eXtension (VAX) instruction set architecture (ISA), developed and manufactured by Digital Equipment Corporation (DEC). Development began in 1976. In addition to being powerful machines in their own right, they also offer the additional ability to run user mode PDP-11 code (thus the -11 in VAX-11), offering an upward compatible path for existing customers.
+The first machine in the series, the VAX-11/780, was announced in October 1977. Its former competitors in the minicomputer space, like Data General and Hewlett-Packard, were unable to successfully respond to the introduction and rapid update of the VAX design. DEC followed the VAX-11/780 with the lower-cost 11/750, and the even lower cost 11/730 and 11/725 models in 1982. More powerful models, initially known as the VAX-11/790 and VAX-11/795, were instead rebranded as the VAX 8600 series.
+The VAX-11 line was discontinued in 1988, having been supplanted by the MicroVAX family on the low end, and the VAX 8000 family on the high end. The VAX-11/780 is historically one of the most successful and studied computers in history.
+

@@ -1,0 +1,5 @@
+Code2000
+
+Code2000 is a serif and pan-Unicode digital font, which includes characters and symbols from a very large range of writing systems. As of the current version 1.176 released in 2023, Code2000 is designed and implemented by James Kass to include as much of the Unicode 15.1 standard as practical (with 15.1 being the currently-released version), and to support OpenType digital typography features. Code2000 supports the Basic Multilingual Plane. Code2001 was designed to support the Supplementary Multilingual Plane, with ISO 8859-1 characters shared with Code2000 for compatibility. A third font, Code2002, was left substantially unfinished and never officially released.
+Code2000 was released as shareware/donationware, with the licensing fee set at $5.00. Code2001 was released under a free software license that prohibited most derivative works but otherwise allowed free use, redistribution and  embedding. The project was discontinued in 2008, with its web domain name later taken by an Australian programming site.
+On September 13, 2023, after 15 years of inactivity, Kass relaunched the project and began work on updating the fonts.

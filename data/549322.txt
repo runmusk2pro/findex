@@ -1,0 +1,9 @@
+Spatial light modulator
+
+A spatial light modulator (SLM) is a device that can control the intensity, phase, or polarization of light in a spatially varying manner. A simple example is an overhead projector transparency. Usually when the term SLM is used, it means that the transparency can be controlled by a computer.
+SLMs are primarily marketed for image projection, displays devices, and maskless lithography. SLMs are also used in optical computing and holographic optical tweezers.
+Usually, an SLM modulates the intensity of the light beam. However, it is also possible to produce devices that modulate the phase of the beam or both the intensity and the phase simultaneously. It is also possible to produce devices that modulate the polarization of the beam, and modulate the polarization, phase, and intensity simultaneously.
+SLMs are used extensively in holographic data storage setups to encode information into a laser beam similarly to the way a transparency does for an overhead projector. They can also be used as part of a holographic display technology.
+In the 1980s, large SLMs were placed on overhead projectors to project computer monitor contents to the screen. Since then, more modern projectors have been developed where the SLM is built inside the projector. These are commonly used in meetings for presentations.
+Liquid crystal SLMs can help solve problems related to laser microparticle manipulation. In this case spiral beam parameters can be changed dynamically.
+

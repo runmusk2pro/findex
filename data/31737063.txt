@@ -1,0 +1,6 @@
+Francesco Gerbaldi
+
+Francesco Gerbaldi (29 July 1858, La Spezia, Kingdom of Sardinia – 29 June 1934, Pavia, Italy) was an Italian geometer, who proved Gerbaldi's theorem.
+Gerbaldi studied at the University of Turin with laurea in 1879 and then became there an assistant to Enrico D'Ovidio. After further study in Germany, he was in Pavia and Rome before being appointed a professor at the University of Palermo. He was a colleague of Giovanni Guccia, the founder of the Circolo Matematico di Palermo. Guccia and Gerbaldi enhanced the reputation of the Faculty of Mathematics of the University of Palermo by recruiting Giuseppe Bagnera, Michele De Franchis, Pasquale Calapso and Michele Cipolla. In 1908 Gerbaldi moved to the University of Pavia, where he remained until his retirement in 1931 due to ill health.
+He is known for what is now called Gerbaldi's theorem, the construction of six pairwise apolar linearly independent nondegenerate ternary quadratic forms (the lowest dimensional quadrics). Later he studied the symmetry group of these six quadrics and found that it is isomorphic to the Valentiner group.
+In 1897 in Zürich, Gerbaldi was an Invited Speaker at the first International Congress of Mathematicians.
