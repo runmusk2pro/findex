@@ -7,7 +7,7 @@ def download_gutenberg_books(target_dir: str = "data", total_books: int = 50):
     target_path.mkdir(exist_ok=True)
     
     books_downloaded = 0
-    # Починаємо з ID 11 (це "Аліса в Країні Див" та інші класичні твори)
+   
     book_id = 11  
     
     print(f"Починаємо завантаження {total_books} великих книг у папку {target_dir}/...")

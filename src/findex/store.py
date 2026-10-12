@@ -5,9 +5,9 @@ import time
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from findex.index import InvertedIndex
+    from findex.index import Index
 
-def save_index_pickle(index: "InvertedIndex", filepath: str | Path):
+def save_index_pickle(index: "Index", filepath: str | Path):
     """Зберігає індекс за допомогою pickle."""
     # ПРИМІТКА З БЕЗПЕКИ: Ніколи не завантажуйте pickle-файли з неперевірених 
     # джерел, оскільки pickle.load може виконувати довільний код.
@@ -26,7 +26,7 @@ def load_index_pickle(filepath: str | Path):
     elapsed = time.perf_counter() - start_time
     return index, elapsed
 
-def save_index_json(index: "InvertedIndex", filepath: str | Path):
+def save_index_json(index: "Index", filepath: str | Path):
     """Зберігає індекс у форматі JSON."""
     start_time = time.perf_counter()
     
@@ -55,9 +55,9 @@ def load_index_json(filepath: str | Path):
         data = json.load(f)
         
     # Локальний імпорт всередині функції повністю усуває проблему циклічного імпорту
-    from findex.index import InvertedIndex, Posting, DocMeta
+    from findex.index import Index, Posting, DocMeta
     
-    instance = InvertedIndex()
+    instance = Index()
     
     for doc_id_str, m_dict in data["documents"].items():
         doc_id = int(doc_id_str)

@@ -1,107 +1,76 @@
-from dataclasses import dataclass
-from typing import Dict, List
-from collections import defaultdict
-from pathlib import Path
-import sys
-import time
-import tracemalloc
-from findex.reader import iter_documents
-from findex.tokenizer import tokenize
-from findex.store import save_index_pickle, save_index_json
+from collections.abc import Mapping
+from functools import cached_property
+from contextlib import contextmanager
+from dataclasses import dataclass, field
 
-@dataclass(frozen=True, slots=True)
+@dataclass
 class Posting:
     doc_id: int
     term_frequency: int
+    # Додаємо позиції для фраз (як вимагає лаба 3).
+    # Якщо у твоєму індексі їх ще немає, буде просто порожній список.
+    positions: list[int] = field(default_factory=list) 
 
-@dataclass(frozen=True, slots=True)
+@dataclass
 class DocMeta:
     doc_id: int
     title: str
     length: int
 
-class InvertedIndex:
+class Index(Mapping):
     def __init__(self):
-        self.index: Dict[str, List[Posting]] = {}
-        self.documents: Dict[int, DocMeta] = {}
+        self.index: dict[str, list[Posting]] = {}
+        self.documents: dict[int, DocMeta] = {}
 
-    @classmethod
-    def build_from_corpus(cls, data_dir: str | Path) -> "InvertedIndex":
-        instance = cls()
-        raw_index: Dict[int, Dict[str, int]] = defaultdict(lambda: defaultdict(int))
-        doc_counter = 0
+    def __getitem__(self, term: str) -> list[Posting]:
+        if term not in self.index:
+            raise KeyError(f"Термін '{term}' не знайдено.")
+        return self.index[term]
 
-        for file_path in Path(data_dir).rglob("*.txt"):
-            if not file_path.is_file():
-                continue
-            
-            doc_counter += 1
-            doc_id = doc_counter
-            
-            with open(file_path, "r", encoding="utf-8") as f:
-                text = f.read()
+    def __iter__(self):
+        return iter(self.index)
 
-            tokens = list(tokenize(text))
-            
-            instance.documents[doc_id] = DocMeta(
-                doc_id=doc_id,
-                title=file_path.name,
-                length=len(tokens)
-            )
+    def __len__(self) -> int:
+        return len(self.index)
 
-            for token in tokens:
-                raw_index[token][doc_id] += 1
+    def __repr__(self) -> str:
+        return f"Index(terms={len(self)}, docs={self.num_docs})"
 
-        for term, docs_freqs in raw_index.items():
-            postings = [
-                Posting(doc_id=d_id, term_frequency=freq)
-                for d_id, freq in sorted(docs_freqs.items())
-            ]
-            instance.index[term] = postings
+    @property
+    def num_docs(self) -> int:
+        return len(self.documents)
 
-        return instance
+    @cached_property
+    def avg_doc_length(self) -> float:
+        if self.num_docs == 0:
+            return 0.0
+        total_length = sum(meta.length for meta in self.documents.values())
+        return total_length / self.num_docs
 
-def main():
-    if len(sys.argv) < 2:
-        print("Використання: python -m findex.index <corpus_dir> [--out index.bin] [--format pickle|json]")
-        sys.exit(1)
-        
-    corpus_dir = sys.argv[1]
-    out_path = "index.bin"
-    file_format = "pickle"
+    def df(self, term: str) -> int:
+        """Кількість документів, у яких зустрічається термін."""
+        return len(self.index.get(term, []))
+
+    def doc_length(self, doc_id: int) -> int:
+        """Повертає довжину конкретного документа."""
+        meta = self.documents.get(doc_id)
+        return meta.length if meta else 0
+
+@contextmanager
+def open_index(path: str):
+    """Контекстний менеджер для завантаження індексу."""
+    # Робимо локальний імпорт, щоб уникнути помилки циклічного імпорту (Circular Import)
+    from findex.store import load_index_pickle, load_index_json
     
-    if "--out" in sys.argv:
-        out_idx = sys.argv.index("--out")
-        if out_idx + 1 < len(sys.argv):
-            out_path = sys.argv[out_idx + 1]
-            
-    if "--format" in sys.argv:
-        fmt_idx = sys.argv.index("--format")
-        if fmt_idx + 1 < len(sys.argv):
-            file_format = sys.argv[fmt_idx + 1]
-
-    print(f"Будуємо індекс із корпусу: {corpus_dir}...")
-    
-    tracemalloc.start()
-    start_time = time.perf_counter()
-    
-    index = InvertedIndex.build_from_corpus(corpus_dir)
-    
-    elapsed = time.perf_counter() - start_time
-    _, peak = tracemalloc.get_traced_memory()
-    tracemalloc.stop()
-    
-    peak_mb = peak / (1024 * 1024)
-    print(f"Індекс збудовано за {elapsed:.2f} сек. Пік пам'яті: {peak_mb:.2f} МБ")
-    print(f"Опрацьовано документів: {len(index.documents)}, унікальних термінів: {len(index.index)}")
-    
-    if file_format == "json":
-        save_time, size = save_index_json(index, out_path)
+    path_str = str(path)
+    if path_str.endswith(".json"):
+        index_instance, _ = load_index_json(path)
     else:
-        save_time, size = save_index_pickle(index, out_path)
+        index_instance, _ = load_index_pickle(path)
         
-    size_mb = size / (1024 * 1024)
-    print(f"Збережено у {out_path} ({size_mb:.2f} МБ) за {save_time:.2f} сек.")
-
-if __name__ == "__main__":
-    main()
+    try:
+        yield index_instance
+    finally:
+        # У нас дані тримаються в пам'яті, тому тут нічого примусово закривати не треба.
+        # Але блок finally гарантує правильну роботу with.
+        pass

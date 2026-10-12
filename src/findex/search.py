@@ -1,117 +1,82 @@
-from typing import List, Set
-import sys
-import time
-from src.findex.store import load_index_pickle, load_index_json
-from findex.index import InvertedIndex, Posting, DocMeta
+import heapq
+from functools import lru_cache
+from dataclasses import dataclass, field
+from findex.index import Index
+from findex.query import parse, Term, Phrase
+from findex.ranking import Scorer
+from findex.utils import timed
 
-class BooleanSearch:
-    def __init__(self, index):
-        self.index = index
+@dataclass(order=True)
+class SearchResult:
+    score: float
+    doc_id: int = field(compare=False)
+    snippet: str = field(compare=False)
+    title: str = field(compare=False)
 
-    def search_merge(self, term1: str, term2: str, operator: str = "AND") -> List[int]:
-        postings1 = self.index.index.get(term1, [])
-        postings2 = self.index.index.get(term2, [])
+def extract_terms_from_ast(node) -> list[str]:
+    """Витягує слова з дерева запиту для підсвітки у сніпеті."""
+    if isinstance(node, Term): return [node.term]
+    if isinstance(node, Phrase): return node.terms
+    if hasattr(node, 'left'): return extract_terms_from_ast(node.left) + extract_terms_from_ast(node.right)
+    if hasattr(node, 'child'): return extract_terms_from_ast(node.child)
+    return []
 
-        i, j = 0, 0
-        result: List[int] = []
-
-        if operator == "AND":
-            while i < len(postings1) and j < len(postings2):
-                p1 = postings1[i]
-                p2 = postings2[j]
-                if p1.doc_id == p2.doc_id:
-                    result.append(p1.doc_id)
-                    i += 1
-                    j += 1
-                elif p1.doc_id < p2.doc_id:
-                    i += 1
-                else:
-                    j += 1
-
-        elif operator == "OR":
-            while i < len(postings1) and j < len(postings2):
-                p1 = postings1[i]
-                p2 = postings2[j]
-                if p1.doc_id == p2.doc_id:
-                    result.append(p1.doc_id)
-                    i += 1
-                    j += 1
-                elif p1.doc_id < p2.doc_id:
-                    result.append(p1.doc_id)
-                    i += 1
-                else:
-                    result.append(p2.doc_id)
-                    j += 1
-            while i < len(postings1):
-                result.append(postings1[i].doc_id)
-                i += 1
-            while j < len(postings2):
-                result.append(postings2[j].doc_id)
-                j += 1
-
-        return result
-
-    def search_set(self, term1: str, term2: str, operator: str = "AND") -> Set[int]:
-        docs1 = {p.doc_id for p in self.index.index.get(term1, [])}
-        docs2 = {p.doc_id for p in self.index.index.get(term2, [])}
-
-        if operator == "AND":
-            return docs1 & docs2
-        elif operator == "OR":
-            return docs1 | docs2
-        return set()
-
-def main():
-    if len(sys.argv) < 3:
-        print("Використання: python -m findex.search <index_file> \"term1 AND term2\" [--engine merge|set] [--format pickle|json]")
-        sys.exit(1)
-        
-    index_file = sys.argv[1]
-    query_str = sys.argv[2]
+def make_snippet(text: str, query_terms: list[str], window: int = 80) -> str:
+    """Вирізає шматок тексту навколо знайденого слова і виділяє його."""
+    if not text: return ""
     
-    engine = "merge"
-    file_format = "pickle"
+    text_lower = text.lower()
+    best_pos = -1
     
-    if "--engine" in sys.argv:
-        eng_idx = sys.argv.index("--engine")
-        if eng_idx + 1 < len(sys.argv):
-            engine = sys.argv[eng_idx + 1]
+    for term in query_terms:
+        pos = text_lower.find(term)
+        if pos != -1:
+            best_pos = pos
+            break
             
-    if "--format" in sys.argv:
-        fmt_idx = sys.argv.index("--format")
-        if fmt_idx + 1 < len(sys.argv):
-            file_format = sys.argv[fmt_idx + 1]
-
-    print(f"Завантаження індексу з {index_file}...")
-    if file_format == "json":
-        index, load_time = load_index_json(index_file)
+    if best_pos == -1:
+        snippet = text[:window * 2] + "..."
     else:
-        index, load_time = load_index_pickle(index_file)
+        start = max(0, best_pos - window)
+        end = min(len(text), best_pos + window)
+        snippet = text[start:end]
+        if start > 0: snippet = "..." + snippet
+        if end < len(text): snippet = snippet + "..."
+    
+    for term in query_terms:
+        snippet = snippet.replace(term, f"\033[92m{term}\033[0m") # Зелений колір у терміналі
+        snippet = snippet.replace(term.capitalize(), f"\033[92m{term.capitalize()}\033[0m")
         
-    print(f"Індекс завантажено за {load_time:.2f} сек.")
-    
-    parts = query_str.split()
-    term1 = parts[0].lower()
-    operator = "AND"
-    term2 = parts[2].lower() if len(parts) > 2 else (parts[1].lower() if len(parts) > 1 else "")
-    if len(parts) >= 3:
-        operator = parts[1].upper()
-        term2 = parts[2].lower()
+    return snippet
 
-    searcher = BooleanSearch(index)
+# Ми кешуємо результати за самим запитом.
+# @timed виведе в консоль, скільки мілісекунд пішло на пошук.
+@timed
+#@lru_cache(maxsize=256)
+def execute_search(query_str: str, index: Index, scorer: Scorer, corpus: dict[int, str] = None, k: int = 10) -> list[SearchResult]:
+    corpus = corpus or {}
     
-    start_time = time.perf_counter()
-    if engine == "set":
-        doc_ids = searcher.search_set(term1, term2, operator)
-    else:
-        doc_ids = searcher.search_merge(term1, term2, operator)
-    elapsed = time.perf_counter() - start_time
+    ast = parse(query_str)
+    query_terms = extract_terms_from_ast(ast)
     
-    print(f"\nЗнайдено документів: {len(doc_ids)} (за {elapsed:.5f} сек, рушій: {engine})")
-    for d_id in list(doc_ids)[:10]:
-        meta = index.documents.get(d_id)
-        if meta:
-            print(f" - [Doc {d_id}] {meta.title}")
-
-if __name__ == "__main__":
-    main()
+    # 1. Знаходимо всі документи, що відповідають булевій умові (AND/OR/NOT)
+    matching_docs = ast.evaluate(index)
+    
+    # 2. Рахуємо бали для цих документів
+    scores = {doc_id: 0.0 for doc_id in matching_docs}
+    for term in query_terms:
+        if term in index:
+            for posting in index[term]:
+                if posting.doc_id in scores:
+                    scores[posting.doc_id] += scorer.score(term, posting, index)
+                    
+    # 3. Формуємо результати
+    results = []
+    for doc_id, score in scores.items():
+        text = corpus.get(doc_id, "")
+        title = index.documents[doc_id].title if doc_id in index.documents else f"Doc {doc_id}"
+        snippet = make_snippet(text, query_terms)
+        results.append(SearchResult(score=score, doc_id=doc_id, snippet=snippet, title=title))
+        
+    # Повертаємо топ-K
+    return heapq.nlargest(k, results)
