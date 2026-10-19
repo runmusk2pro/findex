@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\.github\\workflows",
+    "\\src\\findex"
   ],
+  "SelectedNode": "\\.github",
   "PreviewInSolutionExplorer": false
 }

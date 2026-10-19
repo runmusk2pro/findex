@@ -1,24 +1,23 @@
-from collections.abc import Mapping
+from collections.abc import Mapping, Iterator, Generator
 from functools import cached_property
 from contextlib import contextmanager
 from dataclasses import dataclass, field
+from pathlib import Path
 
-@dataclass
+@dataclass(slots=True)
 class Posting:
     doc_id: int
     term_frequency: int
-    # Додаємо позиції для фраз (як вимагає лаба 3).
-    # Якщо у твоєму індексі їх ще немає, буде просто порожній список.
-    positions: list[int] = field(default_factory=list) 
+    positions: list[int] = field(default_factory=list[int])
 
-@dataclass
+@dataclass(slots=True)
 class DocMeta:
     doc_id: int
     title: str
     length: int
 
-class Index(Mapping):
-    def __init__(self):
+class Index(Mapping[str, list[Posting]]):
+    def __init__(self) -> None:
         self.index: dict[str, list[Posting]] = {}
         self.documents: dict[int, DocMeta] = {}
 
@@ -27,7 +26,7 @@ class Index(Mapping):
             raise KeyError(f"Термін '{term}' не знайдено.")
         return self.index[term]
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         return iter(self.index)
 
     def __len__(self) -> int:
@@ -45,21 +44,17 @@ class Index(Mapping):
         if self.num_docs == 0:
             return 0.0
         total_length = sum(meta.length for meta in self.documents.values())
-        return total_length / self.num_docs
+        return float(total_length) / self.num_docs
 
     def df(self, term: str) -> int:
-        """Кількість документів, у яких зустрічається термін."""
         return len(self.index.get(term, []))
 
     def doc_length(self, doc_id: int) -> int:
-        """Повертає довжину конкретного документа."""
         meta = self.documents.get(doc_id)
         return meta.length if meta else 0
 
 @contextmanager
-def open_index(path: str):
-    """Контекстний менеджер для завантаження індексу."""
-    # Робимо локальний імпорт, щоб уникнути помилки циклічного імпорту (Circular Import)
+def open_index(path: str | Path) -> Generator[Index, None, None]:
     from findex.store import load_index_pickle, load_index_json
     
     path_str = str(path)
@@ -71,6 +66,4 @@ def open_index(path: str):
     try:
         yield index_instance
     finally:
-        # У нас дані тримаються в пам'яті, тому тут нічого примусово закривати не треба.
-        # Але блок finally гарантує правильну роботу with.
         pass
