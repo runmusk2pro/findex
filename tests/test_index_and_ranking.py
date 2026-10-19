@@ -1,5 +1,5 @@
 import pytest
-from findex.index import Index, DocMeta, Posting, open_index
+from findex.index import Index, open_index
 from findex.ranking import BM25, TfIdf
 from findex.store import save_index_pickle
 from pathlib import Path
