@@ -10,10 +10,9 @@ from rich.console import Console
 from rich.table import Table
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
 
-from findex.index import Index, open_index, build_partial, merge, PartialIndex
+from findex.index import open_index, build_partial, merge, PartialIndex
 from findex.search import execute_search
 from findex.ranking import BM25, TfIdf
-from findex.store import save_index_pickle
 
 app = typer.Typer(help="Findex: CLI Search Engine Tool", add_completion=False)
 err_console = Console(stderr=True)
@@ -76,7 +75,7 @@ def index(
         current_id += len(c)
         
     try:
-        gil_status = "УВІМКНЕНО (True)" if sys._is_gil_enabled() else "ВИМКНЕНО (False)"
+        gil_status = "УВІМКНЕНО (True)" if sys._is_gil_enabled() else "ВИМКНЕНО (False)"  # type: ignore[reportPrivateUsage]
         console.print(f"[bold cyan]Статус GIL: {gil_status}[/bold cyan]")
     except AttributeError:
         console.print("[bold cyan]Статус GIL: Звичайна збірка (GIL завжди увімкнено)[/bold cyan]")
@@ -121,6 +120,7 @@ def index(
         t_merge = time.perf_counter() - t0_merge
         
         progress.update(task, description="Збереження індексу...", advance=0)
+        from findex.store import save_index_pickle
         save_index_pickle(final_index, out)
 
     t_wall = time.perf_counter() - t0_wall

@@ -1,9 +1,8 @@
-from collections.abc import Mapping, Iterator, Generator
+from collections.abc import Mapping, Iterator, Generator, Iterable
 from functools import cached_property
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
-from collections.abc import Mapping, Iterator, Generator, Iterable
 
 @dataclass(slots=True)
 class Posting:
@@ -71,8 +70,8 @@ def open_index(path: str | Path) -> Generator[Index, None, None]:
     
 @dataclass(slots=True)
 class PartialIndex:
-    index: dict[str, list[Posting]] = field(default_factory=dict)
-    documents: dict[int, DocMeta] = field(default_factory=dict)
+    index: dict[str, list[Posting]] = field(default_factory=lambda: {})
+    documents: dict[int, DocMeta] = field(default_factory=lambda: {})
 
 def build_partial(chunk: list[Path], start_doc_id: int) -> PartialIndex:
     """Будує частковий індекс для заданого списку файлів (працює у воркері)."""
