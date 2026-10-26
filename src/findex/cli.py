@@ -1,6 +1,8 @@
-﻿import sys
+import sys
 import json
 import logging
+import time
+import concurrent.futures
 import typer
 from pathlib import Path
 from typing import Literal, Annotated
@@ -8,9 +10,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
 
-from findex.index import Index, open_index, DocMeta, Posting
-from findex.reader import iter_documents
-from findex.tokenizer import tokenize
+from findex.index import Index, open_index, build_partial, merge, PartialIndex
 from findex.search import execute_search
 from findex.ranking import BM25, TfIdf
 from findex.store import save_index_pickle
@@ -39,18 +39,52 @@ def main(
 ) -> None:
     setup_logging(v)
 
+def chunk_list(lst: list[Path], n: int) -> list[list[Path]]:
+    """Ділить список на n приблизно рівних частин."""
+    if n <= 0:
+        return [lst]
+    k, m = divmod(len(lst), n)
+    return [lst[i * k + min(i, m):(i + 1) * k + min(i + 1, m)] for i in range(n)]
+
 @app.command()
 def index(
     corpus: Annotated[Path, typer.Argument(help="Папка з текстовими файлами")],
     out: Annotated[Path, typer.Option("--out", "-o", help="Шлях для збереження індексу")] = Path("index.bin"),
+    workers: Annotated[int, typer.Option("--workers", "-w", help="Кількість воркерів (ядер)")] = 1,
+    executor: Annotated[Literal["serial", "threads", "processes"], typer.Option("--executor", "-e", help="Тип паралелізму")] = "serial",
 ) -> None:
-    """Побудувати інвертований індекс з корпусу документів."""
+    """Побудувати інвертований індекс з використанням потоків/процесів."""
     if not corpus.exists() or not corpus.is_dir():
         err_console.print(f"[red]Помилка: Папку '{corpus}' не знайдено.[/red]")
         raise typer.Exit(code=1)
 
-    idx = Index()
-    doc_id = 0
+    # Збираємо всі .txt файли
+    files = list(corpus.rglob("*.txt"))
+    if not files:
+        err_console.print("[yellow]Попередження: текстових файлів не знайдено.[/yellow]")
+        raise typer.Exit(code=0)
+
+    # Розбиваємо файли на чанки (по одному на воркера)
+    actual_workers = min(workers, len(files))
+    chunks = chunk_list(files, actual_workers)
+    
+    # Визначаємо стартовий doc_id для кожного чанка, щоб вони були унікальними
+    start_ids: list[int] = []
+    current_id = 1
+    for c in chunks:
+        start_ids.append(current_id)
+        current_id += len(c)
+        
+    try:
+        gil_status = "УВІМКНЕНО (True)" if sys._is_gil_enabled() else "ВИМКНЕНО (False)"
+        console.print(f"[bold cyan]Статус GIL: {gil_status}[/bold cyan]")
+    except AttributeError:
+        console.print("[bold cyan]Статус GIL: Звичайна збірка (GIL завжди увімкнено)[/bold cyan]")
+
+    t0_wall = time.perf_counter()
+    t0_cpu = time.process_time()
+    
+    partials: list[PartialIndex] = []
 
     with Progress(
         SpinnerColumn(),
@@ -59,28 +93,41 @@ def index(
         TaskProgressColumn(),
         console=err_console,
     ) as progress:
-        task = progress.add_task("Індексація документів...", total=None)
-        
-        for text in iter_documents(corpus):
-            doc_id += 1
-            tokens = list(tokenize(text))
-            doc_len = len(tokens)
-            
-            idx.documents[doc_id] = DocMeta(doc_id=doc_id, title=f"Doc_{doc_id}", length=doc_len)
-            
-            counts: dict[str, int] = {}
-            for t in tokens:
-                counts[t] = counts.get(t, 0) + 1
-                
-            for term, freq in counts.items():
-                if term not in idx.index:
-                    idx.index[term] = []
-                idx.index[term].append(Posting(doc_id=doc_id, term_frequency=freq))
-                
-            progress.update(task, advance=1, description=f"Оброблено документів: {doc_id}")
+        task = progress.add_task(f"Індексація ({executor}, {actual_workers} workers)...", total=len(chunks))
 
-    save_index_pickle(idx, out)
-    console.print(f"[green]Успішно заіндексовано {doc_id} документів у '{out}'.[/green]")
+        if executor == "serial":
+            for c, sid in zip(chunks, start_ids):
+                partials.append(build_partial(c, sid))
+                progress.update(task, advance=1)
+                
+        elif executor == "threads":
+            with concurrent.futures.ThreadPoolExecutor(max_workers=actual_workers) as pool:
+                futures = [pool.submit(build_partial, c, sid) for c, sid in zip(chunks, start_ids)]
+                for fut in concurrent.futures.as_completed(futures):
+                    partials.append(fut.result())
+                    progress.update(task, advance=1)
+                    
+        elif executor == "processes":
+            with concurrent.futures.ProcessPoolExecutor(max_workers=actual_workers) as pool:
+                futures = [pool.submit(build_partial, c, sid) for c, sid in zip(chunks, start_ids)]
+                for fut in concurrent.futures.as_completed(futures):
+                    partials.append(fut.result())
+                    progress.update(task, advance=1)
+
+        progress.update(task, description="Злиття (merge)...", advance=0)
+        
+        t0_merge = time.perf_counter()
+        final_index = merge(partials)
+        t_merge = time.perf_counter() - t0_merge
+        
+        progress.update(task, description="Збереження індексу...", advance=0)
+        save_index_pickle(final_index, out)
+
+    t_wall = time.perf_counter() - t0_wall
+    t_cpu = time.process_time() - t0_cpu
+    
+    console.print(f"[green]Успішно![/green] Документів: {final_index.num_docs}")
+    console.print(f"Wall time: {t_wall:.2f}s | CPU time: {t_cpu:.2f}s | Merge time: {t_merge:.2f}s")
 
 @app.command()
 def search(
@@ -141,6 +188,6 @@ def stats(index_path: Annotated[Path, typer.Argument(help="Шлях до фай�
         table.add_row("Середня довжина документа", f"{idx.avg_doc_length:.2f}")
 
         console.print(table)
-         
+
 if __name__ == "__main__":
     app()

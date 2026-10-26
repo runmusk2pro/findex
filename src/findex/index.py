@@ -3,6 +3,7 @@ from functools import cached_property
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
+from collections.abc import Mapping, Iterator, Generator, Iterable
 
 @dataclass(slots=True)
 class Posting:
@@ -67,3 +68,59 @@ def open_index(path: str | Path) -> Generator[Index, None, None]:
         yield index_instance
     finally:
         pass
+    
+@dataclass(slots=True)
+class PartialIndex:
+    index: dict[str, list[Posting]] = field(default_factory=dict)
+    documents: dict[int, DocMeta] = field(default_factory=dict)
+
+def build_partial(chunk: list[Path], start_doc_id: int) -> PartialIndex:
+    """Будує частковий індекс для заданого списку файлів (працює у воркері)."""
+    from findex.tokenizer import tokenize
+    
+    partial = PartialIndex()
+    current_id = start_doc_id
+    
+    for file_path in chunk:
+        try:
+            text = file_path.read_text(encoding="utf-8", errors="ignore")
+        except Exception:
+            text = ""
+            
+        tokens = list(tokenize(text))
+        partial.documents[current_id] = DocMeta(doc_id=current_id, title=file_path.name, length=len(tokens))
+        
+        counts: dict[str, int] = {}
+        positions_map: dict[str, list[int]] = {}
+        
+        for pos, t in enumerate(tokens):
+            counts[t] = counts.get(t, 0) + 1
+            if t not in positions_map:
+                positions_map[t] = []
+            positions_map[t].append(pos)
+            
+        for term, freq in counts.items():
+            if term not in partial.index:
+                partial.index[term] = []
+            partial.index[term].append(Posting(doc_id=current_id, term_frequency=freq, positions=positions_map[term]))
+            
+        current_id += 1
+        
+    return partial
+
+def merge(partials: Iterable[PartialIndex]) -> Index:
+    """Зливає часткові індекси в один глобальний."""
+    final_idx = Index()
+    
+    for p in partials:
+        final_idx.documents.update(p.documents)
+        for term, postings in p.index.items():
+            if term not in final_idx.index:
+                final_idx.index[term] = []
+            final_idx.index[term].extend(postings)
+            
+    # Постінги повинні бути відсортовані за doc_id (вимога для оптимізацій)
+    for term in final_idx.index:
+        final_idx.index[term].sort(key=lambda x: x.doc_id)
+        
+    return final_idx
